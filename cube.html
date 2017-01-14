@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		html, body { margin: 0, padding: 0, overflow: hidden}
+	</style>
+</head>
+<body>
+
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js"></script>
+<script type="text/javascript">
+	//To actually be able to display anything with three.js, we need three things: A scene, a camera, and a renderer so we can render the scene with the camera.
+
+	var scene = new THREE.Scene();
+
+	//There are a few different cameras in three.js. For now, we will use the PerspectiveCamera
+		//THREE.PerspectiveCamera( <FIELD VIEW> , <ASPECT RATIO>, <near clipping plane>, <far clipping plane> )
+			//Clipping Planes: What that means, is that objects further away from the camera than the value of far or closer than near won't be rendered.
+		var camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+	//three.js comes with a few other options other than WebGLRenderer, used as fallbacks for users with older browsers
+		var renderer = new THREE.WebGLRenderer();
+
+		//determines the size at which we want to render our app
+		//you're going to want to reduce the size for performance intense apps
+		// you can also look up how to pass in arguments here to reduce the resolution
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			
+				//add the renderer to the html (the canvas element)
+				$('body').append( renderer.domElement );
+
+	//we make the cube here!
+		var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+		var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+
+		//A mesh is an object that takes a geometry, and applies a material to it, which we then can insert to our scene, and move freely around.
+			var cube = new THREE.Mesh( geometry, material );
+		
+			//add cube to the scene
+			//by default it gets added to (0,0,0) - b/c of this the camera and cube are inside each other
+				scene.add(cube);
+
+		//where's the camera relative to the cube?
+			camera.position.z = 5;
+
+	//Anything you want to move or change while the app is running has to go through the render loop. This runs 60 times per second.
+		function render() {
+			requestAnimationFrame( render );
+			
+			cube.rotation.x += 0.1;
+			cube.rotation.y += 0.1;
+
+			renderer.render( scene, camera );
+		}
+		render();
+
+</script>
+</body>
+</html>
+
